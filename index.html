@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -6,48 +6,48 @@
 <title>宠物合成游戏</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:sans-serif;background:#f5f0eb;display:flex;justify-content:center;padding:8px 0;min-height:100vh;user-select:none;-webkit-user-select:none}
-#wrap{display:flex;gap:8px;align-items:flex-start}
-#left{display:flex;flex-direction:column;gap:7px;width:88px}
-#right{display:flex;flex-direction:column;gap:7px;width:88px;overflow:hidden}
-.card{background:#fff;border:1px solid #eee;border-radius:10px;padding:7px 9px}
-.lbl{font-size:10px;color:#bbb;margin-bottom:1px}
-.val{font-size:19px;font-weight:700;color:#222}
-.val-sm{font-size:15px;font-weight:700;color:#e07020}
-.nbox{display:flex;align-items:center;justify-content:center;height:60px}
-#gameCanvas{border:2px solid #e0d8d0;border-radius:14px;display:block;background:#fff9f5;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent}
-.btn{border:1px solid #ddd;border-radius:8px;padding:7px;font-size:12px;cursor:pointer;background:#fff;color:#333;width:100%}
-.btn:hover{background:#f5f5f5}
-.chain{font-size:9px;color:#999;line-height:1.7;overflow:hidden}
+body{font-family:sans-serif;background:#f5f0eb;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:10px 0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+#container{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:100%;width:282px}
+#score-wrap{text-align:center;padding:6px 0 2px}
+#score-wrap .lbl{font-size:11px;color:#bbb;margin-bottom:2px;letter-spacing:1px}
+#score-wrap .val{font-size:26px;font-weight:700;color:#222;line-height:1.2}
+#best-row{font-size:13px;color:#e07020;font-weight:600;margin-top:2px}
+#cvwrap{position:relative;flex-shrink:0}
+#gameCanvas{border:2px solid #e0d8d0;border-radius:14px;display:block;background:#fff9f5;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent;max-width:100%}
+#bottom-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:4px 8px}
+#next-section{display:flex;align-items:center;gap:6px}
+#next-section .lbl{font-size:11px;color:#bbb}
+.nbox{display:flex;align-items:center;justify-content:center;width:50px;height:50px}
+#btn-restart{border:1px solid #ddd;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;background:#fff;color:#555;-webkit-tap-highlight-color:transparent}
+#btn-restart:active{background:#f0f0f0}
 #go{display:none;position:absolute;inset:0;background:rgba(0,0,0,.65);border-radius:14px;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:9}
 #go.on{display:flex}
 #go h2{color:#fff;font-size:20px}
 #go .score-info{color:rgba(255,255,255,.9);font-size:14px;text-align:center;line-height:2}
-#go .btn{width:130px;font-size:14px;padding:10px;background:#fff}
-#cvwrap{position:relative;flex-shrink:0}
+#go .btn{width:130px;font-size:14px;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px;cursor:pointer;color:#333}
 </style>
 </head>
 <body>
-<div id="wrap">
-  <div id="left">
-    <div class="card"><div class="lbl">本局分数</div><div class="val" id="sc">0</div></div>
-    <div class="card"><div class="lbl">历史最高</div><div class="val-sm" id="bs">0</div></div>
-    <div class="card"><div class="lbl">下一个</div><div class="nbox"><canvas id="nc" width="56" height="56"></canvas></div></div>
-    <button class="btn" onclick="restart()">🔄 重开</button>
+<div id="container">
+  <div id="score-wrap">
+    <div class="lbl">本局分数</div>
+    <div class="val" id="sc">0</div>
+    <div id="best-row">历史最高：<span id="bs">0</span></div>
   </div>
   <div id="cvwrap">
     <canvas id="gameCanvas" width="264" height="450"></canvas>
     <div id="go">
-      <h2>游戏结束 😿</h2>
+      <h2>游戏结束 😋</h2>
       <div class="score-info" id="gop"></div>
       <button class="btn" onclick="restart()">再来一局</button>
     </div>
   </div>
-  <div id="right">
-    <div class="card">
-      <div class="lbl">合成链</div>
-      <div class="chain" id="chain"></div>
+  <div id="bottom-bar">
+    <div id="next-section">
+      <div class="lbl">下一个</div>
+      <div class="nbox"><canvas id="nc" width="56" height="56"></canvas></div>
     </div>
+    <button id="btn-restart" onclick="restart()">🔄 重开</button>
   </div>
 </div>
 <script>
@@ -132,10 +132,7 @@ function updateUI(){
     nctx.save();nctx.translate(28,28);nctx.scale(s,s);
     nctx.drawImage(oc,-sz/2,-sz/2);nctx.restore();
   }
-  let h='';
-  for(let i=0;i<N-1;i++)h+=`Lv${i+1}×2→Lv${i+2}<br>`;
-  h+=`Lv${N} = 最终形态`;
-  document.getElementById('chain').innerHTML=h;
+  
 }
 
 function restart(){
@@ -303,8 +300,7 @@ cv.addEventListener('touchmove',e=>{
 
 cv.addEventListener('touchend',e=>{
   e.preventDefault();
-  // touchend 时 touches 为空，用 changedTouches 获取最后位置
-  if(e.changedTouches.length>0){
+  // touchend
     targetX=clientToCanvas(e.changedTouches[0].clientX);
     mouseX=targetX;
   }
@@ -338,3 +334,4 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
+

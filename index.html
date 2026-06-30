@@ -1,22 +1,21 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>宠物合成游戏</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:sans-serif;background:#f5f0eb;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:10px 0;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+<style>*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:sans-serif;background:#f5f0eb;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:12px 0 8px;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
 #container{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:100%;width:282px}
-#score-wrap{text-align:center;padding:6px 0 2px}
-#score-wrap .lbl{font-size:11px;color:#bbb;margin-bottom:2px;letter-spacing:1px}
-#score-wrap .val{font-size:26px;font-weight:700;color:#222;line-height:1.2}
-#best-row{font-size:13px;color:#e07020;font-weight:600;margin-top:2px}
+#score-wrap{text-align:center;padding:4px 0 2px}
+#score-wrap .lbl{font-size:11px;color:#aaa;margin-bottom:1px;letter-spacing:2px}
+#score-wrap .val{font-size:28px;font-weight:700;color:#222;line-height:1.2}
+#best-row{font-size:13px;color:#e07020;font-weight:600;margin-top:1px}
 #cvwrap{position:relative;flex-shrink:0}
 #gameCanvas{border:2px solid #e0d8d0;border-radius:14px;display:block;background:#fff9f5;touch-action:none;cursor:crosshair;-webkit-tap-highlight-color:transparent;max-width:100%}
 #bottom-bar{display:flex;align-items:center;justify-content:space-between;width:100%;padding:4px 8px}
 #next-section{display:flex;align-items:center;gap:6px}
-#next-section .lbl{font-size:11px;color:#bbb}
+#next-section .lbl{font-size:11px;color:#aaa}
 .nbox{display:flex;align-items:center;justify-content:center;width:50px;height:50px}
 #btn-restart{border:1px solid #ddd;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;background:#fff;color:#555;-webkit-tap-highlight-color:transparent}
 #btn-restart:active{background:#f0f0f0}
@@ -24,8 +23,7 @@ body{font-family:sans-serif;background:#f5f0eb;display:flex;flex-direction:colum
 #go.on{display:flex}
 #go h2{color:#fff;font-size:20px}
 #go .score-info{color:rgba(255,255,255,.9);font-size:14px;text-align:center;line-height:2}
-#go .btn{width:130px;font-size:14px;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px;cursor:pointer;color:#333}
-</style>
+#go .btn{width:130px;font-size:14px;padding:10px;background:#fff;border:1px solid #ddd;border-radius:8px;cursor:pointer;color:#333}</style>
 </head>
 <body>
 <div id="container">
@@ -300,7 +298,8 @@ cv.addEventListener('touchmove',e=>{
 
 cv.addEventListener('touchend',e=>{
   e.preventDefault();
-  // touchend
+  // touchend 时 touches 为空，用 changedTouches 获取最后位置
+  if(e.changedTouches.length>0){
     targetX=clientToCanvas(e.changedTouches[0].clientX);
     mouseX=targetX;
   }
@@ -334,4 +333,3 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
-
